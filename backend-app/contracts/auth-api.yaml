@@ -1,0 +1,168 @@
+
+openapi: 3.0.4
+
+info:
+  title: Job Portal API
+  version: 1.0.0
+  description: Authentication and authorization API contract.
+
+servers:
+  - url: http://localhost:5000/api
+
+tags:
+  - name: Authentication
+
+paths:
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input
+        '409':
+          description: Email already registered
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Invalid email or password
+        '403':
+          description: Account is inactive
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Get current user
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+        '401':
+          description: Missing, invalid, or expired token
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [fullName, email, password]
+      properties:
+        fullName:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Rahul Sharma
+        email:
+          type: string
+          format: email
+          example: rahul@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 72
+          example: StrongPass123!
+        role:
+          type: string
+          enum: [jobSeeker, recruiter]
+          default: jobSeeker
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: rahul@example.com
+        password:
+          type: string
+          format: password
+          example: StrongPass123!
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [jobSeeker, recruiter, admin]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            token:
+              type: string
+              description: JWT bearer token
