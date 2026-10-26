@@ -27,9 +27,10 @@ const validate = (schema, data) => {
 }
 
 const handleError = (res, error) => {
+    
+    console.error("Authentication error:", error);
 
-    if(error.code == 11000)
-    {
+    if (error.code === 11000) {
         return res.status(409).json({
             success: false,
             message: "Email Already Registered"
@@ -40,13 +41,12 @@ const handleError = (res, error) => {
 
     return res.status(statusCode).json({
         success: false,
-        message: 
-            statusCode == 500
-            ? "Internal Server Error" 
-            : error.message,
+        message:
+            statusCode === 500
+                ? "Internal Server Error"
+                : error.message,
         ...(error.details && { errors: error.details }),
     });
-
 };
 
 // Resgister Controller 
