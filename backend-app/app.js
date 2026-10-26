@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import YAML from "yaml";
 
 import authRoutes from "./routes/authRoutes.js";
+import connectDB from "./config/db.js";
 
 const app = express();
 
@@ -24,6 +25,21 @@ const openApiDocument = YAML.parse(
 
 app.use(cors());
 app.use(express.json());
+
+// NEW: Connect to MongoDB before handling API routes
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database connection failed:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Database connection failed",
+    });
+  }
+});
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({
