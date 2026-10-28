@@ -1,0 +1,83 @@
+
+openapi: 3.0.4
+
+info:
+  title: Job Portal API - User Account
+  version: 1.0.0
+  description: User account management API contract.
+
+servers:
+  - url: http://localhost:5000/api
+
+tags:
+  - name: User Account
+
+paths:
+  /users/me:
+    get:
+      tags:
+        - User Account
+      summary: Get the logged-in user's account details
+      operationId: getMyAccount
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Account details fetched successfully
+        '401':
+          description: Authentication required
+        '404':
+          description: User account not found
+        '500':
+          description: Internal server error
+
+    patch:
+      tags:
+        - User Account
+      summary: Update the logged-in user's account details
+      operationId: updateMyAccount
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+            example:
+              fullName: Umesh Bhadane
+              email: umesh@example.com
+      responses:
+        '200':
+          description: Account details updated successfully
+        '400':
+          description: Invalid account data
+        '401':
+          description: Authentication required
+        '404':
+          description: User account not found
+        '409':
+          description: Email is already registered
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      properties:
+        fullName:
+          type: string
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+      additionalProperties: false

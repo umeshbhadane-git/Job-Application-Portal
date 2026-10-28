@@ -1,0 +1,104 @@
+openapi: 3.0.4
+
+info:
+  title: Job Portal API - Profile
+  version: 1.0.0
+  description: Profile management API contract.
+
+servers:
+  - url: http://localhost:5000/api
+
+tags:
+  - name: Profile
+
+paths:
+  /profile/me:
+    get:
+      tags: [Profile]
+      summary: Get the logged-in user's profile
+      operationId: getMyProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile fetched successfully
+        '401':
+          description: Authentication required
+        '500':
+          description: Internal server error
+
+    put:
+      tags: [Profile]
+      summary: Update the logged-in user's profile
+      operationId: updateMyProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+            example:
+              headline: Full Stack Developer
+              location: Pune, India
+              bio: I enjoy building web applications.
+              skills:
+                - JavaScript
+                - React
+                - Node.js
+                - MongoDB
+              portfolioUrl: https://example.com
+      responses:
+        '200':
+          description: Profile updated successfully
+        '400':
+          description: Invalid profile data
+        '401':
+          description: Authentication required
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    UpdateProfileRequest:
+      type: object
+      properties:
+        headline:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 25
+        location:
+          type: string
+          maxLength: 150
+        bio:
+          type: string
+          maxLength: 2000
+        skills:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 50
+        experience:
+          type: array
+          maxItems: 30
+          items:
+            type: object
+        education:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+        portfolioUrl:
+          type: string
+          format: uri
+        linkedInUrl:
+          type: string
+          format: uri
+        githubUrl:
+          type: string
+          format: uri
+      additionalProperties: false
