@@ -11,6 +11,10 @@ import {
   LogOut,
   Search,
   Users,
+  UserRound,
+  UserRoundPen,
+  Upload,
+  ChevronRight,
 } from "lucide-react";
 
 type User = {
@@ -34,12 +38,11 @@ const getAuthSnapshot = () =>
 const getServerAuthSnapshot = () => "[]";
 
 const parseUser = (storedUser: string | null): User | null => {
-  if (!storedUser) {
-    return null;
-  }
+  if (!storedUser) return null;
 
   try {
     const user: unknown = JSON.parse(storedUser);
+
     if (
       typeof user === "object" &&
       user !== null &&
@@ -70,10 +73,12 @@ export default function DashboardPage() {
     getAuthSnapshot,
     getServerAuthSnapshot
   );
+
   const [token, storedUser] = JSON.parse(authSnapshot) as [
     string | null,
     string | null,
   ];
+
   const user = useMemo(() => parseUser(storedUser), [storedUser]);
 
   useEffect(() => {
@@ -106,7 +111,8 @@ export default function DashboardPage() {
   const roleContent = {
     jobSeeker: {
       title: "Your job search starts here",
-      description: "Explore opportunities and keep track of your applications.",
+      description:
+        "Explore opportunities and keep track of your applications.",
       action: "Find jobs",
       href: "/jobs",
       icon: Search,
@@ -118,7 +124,8 @@ export default function DashboardPage() {
     },
     recruiter: {
       title: "Find your next great hire",
-      description: "Manage your job postings and discover talented candidates.",
+      description:
+        "Manage your job postings and discover talented candidates.",
       action: "Manage jobs",
       href: "/recruiter/jobs",
       icon: BriefcaseBusiness,
@@ -130,7 +137,8 @@ export default function DashboardPage() {
     },
     admin: {
       title: "Platform overview",
-      description: "Manage platform activity and monitor user accounts.",
+      description:
+        "Manage platform activity and monitor user accounts.",
       action: "Manage users",
       href: "/admin/users",
       icon: Users,
@@ -160,6 +168,15 @@ export default function DashboardPage() {
             <span className="hidden text-sm text-slate-600 dark:text-slate-300 sm:block">
               {user.fullName}
             </span>
+
+            <Link
+              href="/dashboard/profile"
+              aria-label="Open my profile"
+              className="rounded-xl border border-slate-200 p-2 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              <UserRound size={20} />
+            </Link>
+
             <button
               type="button"
               onClick={handleLogout}
@@ -177,19 +194,24 @@ export default function DashboardPage() {
           <LayoutDashboard size={16} />
           Dashboard
           <span>·</span>
-          <span className="capitalize">{user.role.replace(/([A-Z])/g, " $1")}</span>
+          <span className="capitalize">
+            {user.role.replace(/([A-Z])/g, " $1")}
+          </span>
         </div>
 
         <section className="mt-6 rounded-3xl bg-blue-600 p-7 text-white sm:p-10">
           <p className="text-sm font-medium text-blue-100">
             Welcome back, {user.fullName}
           </p>
+
           <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             {content.title}
           </h1>
+
           <p className="mt-4 max-w-2xl leading-7 text-blue-100">
             {content.description}
           </p>
+
           <Link
             href={content.href}
             className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-blue-700 transition hover:bg-blue-50"
@@ -201,6 +223,7 @@ export default function DashboardPage() {
 
         <section className="mt-10">
           <h2 className="text-xl font-bold">Your overview</h2>
+
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {content.stats.map((stat) => {
               const Icon = stat.icon;
@@ -214,14 +237,78 @@ export default function DashboardPage() {
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       {stat.label}
                     </p>
+
                     <span className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-950 dark:text-blue-300">
                       <Icon size={20} />
                     </span>
                   </div>
+
                   <p className="mt-5 text-3xl font-bold">{stat.value}</p>
                 </article>
               );
             })}
+          </div>
+        </section>
+
+        {/* Profile and Resume navigation */}
+        <section className="mt-10">
+          <h2 className="text-xl font-bold">Quick Actions</h2>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            Keep your professional profile and resume up to date.
+          </p>
+
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <Link
+              href="/dashboard/profile"
+              className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-500"
+            >
+              <span className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-950 dark:text-blue-300">
+                <UserRoundPen size={24} />
+              </span>
+
+              <span className="min-w-0 flex-1">
+                <span className="block text-lg font-semibold">
+                  Update Profile
+                </span>
+                <span className="mt-2 block text-sm leading-6 text-slate-500 dark:text-slate-400">
+                  Edit your personal details, skills, work experience,
+                  education, and professional links.
+                </span>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-600">
+                  Manage Profile
+                  <ChevronRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </span>
+              </span>
+            </Link>
+
+            <Link
+              href="/dashboard/resume"
+              className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-500"
+            >
+              <span className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-950 dark:text-blue-300">
+                <Upload size={24} />
+              </span>
+
+              <span className="min-w-0 flex-1">
+                <span className="block text-lg font-semibold">
+                  Resume Management
+                </span>
+                <span className="mt-2 block text-sm leading-6 text-slate-500 dark:text-slate-400">
+                  Upload a new resume, download your current resume,
+                  or replace an existing file.
+                </span>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-600">
+                  Manage Resume
+                  <ChevronRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </span>
+              </span>
+            </Link>
           </div>
         </section>
       </div>
