@@ -38,6 +38,13 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: true
         },
+
+        accountStatus: {
+            type: String,
+            enum: ["active", "deactivated", "suspended"],
+            default: "active",
+            index: true,
+        },
     },
     {
         timestamps: true,

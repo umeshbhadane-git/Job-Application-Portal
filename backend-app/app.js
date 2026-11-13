@@ -10,6 +10,11 @@ import connectDB from "./config/db.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
+import publicJobRoutes from "./routes/publicJobRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 
@@ -46,6 +51,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/resumes", resumeRoutes);
+app.use("/api/jobs/public", publicJobRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/reports", reportRoutes);
 
 app.use("/api-docs", express.static(contractsDirectory));
 app.use(

@@ -1,0 +1,214 @@
+paths:
+  /api/admin/stats:
+    get:
+      tags: [Administration]
+      summary: Get platform-wide user, job, and application statistics
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Aggregated platform statistics
+        "403":
+          description: Admin access required
+
+  /api/admin/users:
+    get:
+      tags: [Administration]
+      summary: Search and paginate platform accounts
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: role
+          schema:
+            type: string
+            enum: [jobSeeker, recruiter, admin]
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [active, deactivated, suspended]
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+      responses:
+        "200":
+          description: Paginated account results
+
+  /api/admin/users/{userId}/status:
+    patch:
+      tags: [Administration]
+      summary: Activate, deactivate, or suspend an account
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [active, deactivated, suspended]
+      responses:
+        "200":
+          description: Account status updated
+        "400":
+          description: Invalid status or self-deactivation
+        "404":
+          description: Account not found
+
+  /api/admin/jobs:
+    get:
+      tags: [Administration]
+      summary: Search and paginate job listings for moderation
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [draft, published, closed, archived]
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+      responses:
+        "200":
+          description: Paginated listing results with recruiter details
+
+  /api/admin/jobs/{jobId}/status:
+    patch:
+      tags: [Administration]
+      summary: Close or archive a listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [closed, archived]
+      responses:
+        "200":
+          description: Job listing moderated
+        "404":
+          description: Job not found
+
+  /api/admin/reports:
+    get:
+      tags: [Administration]
+      summary: List job reports for moderation
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, reviewed, dismissed]
+      responses:
+        "200":
+          description: Reports and associated job details
+
+  /api/admin/reports/{reportId}:
+    patch:
+      tags: [Administration]
+      summary: Mark a report reviewed or dismissed
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: reportId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [reviewed, dismissed]
+      responses:
+        "200":
+          description: Report decision recorded
+        "404":
+          description: Report not found
+
+  /api/reports/jobs/{jobId}:
+    post:
+      tags: [Administration]
+      summary: Submit a report against a published job
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  minLength: 5
+                  maxLength: 1000
+      responses:
+        "201":
+          description: Report submitted
+        "409":
+          description: User already reported this job

@@ -3,7 +3,7 @@ openapi: 3.0.4
 info:
   title: Job Portal API
   version: 1.0.0
-  description: Authentication, authorization, and profile management API contract.
+  description: Authentication, profile, job search and management, applications, and moderation API contract.
 
 servers:
   - url: http://localhost:5000/api
@@ -11,6 +11,10 @@ servers:
 tags:
   - name: Authentication
   - name: Profile
+  - name: Job Management
+  - name: Public Jobs
+  - name: Applications
+  - name: Administration
 
 paths:
   /auth/register:
@@ -25,6 +29,50 @@ paths:
     $ref: './user-api.yaml#/paths/~1users~1me'
   /resumes:
     $ref: './resume-api.yaml#/paths/~1resumes'
+  /jobs:
+    $ref: "./job-api.yaml#/paths/~1api~1jobs"
+  /jobs/{id}:
+    $ref: "./job-api.yaml#/paths/~1api~1jobs~1{id}"
+  /jobs/{id}/status:
+    $ref: "./job-api.yaml#/paths/~1api~1jobs~1{id}~1status"
+  /jobs/public:
+    $ref: "./job-api.yaml#/paths/~1api~1jobs~1public"
+  /jobs/public/{id}:
+    $ref: "./job-api.yaml#/paths/~1api~1jobs~1public~1{id}"
+  /applications:
+    $ref: "./application-api.yaml#/paths/~1api~1applications"
+  /applications/me:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1me"
+  /applications/me/stats:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1me~1stats"
+  /applications/recruiter/stats:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1recruiter~1stats"
+  /applications/jobs/{jobId}:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1jobs~1{jobId}"
+  /applications/{applicationId}/status:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1{applicationId}~1status"
+  /applications/{applicationId}/withdraw:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1{applicationId}~1withdraw"
+  /applications/{applicationId}/notes:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1{applicationId}~1notes"
+  /applications/{applicationId}/resume:
+    $ref: "./application-api.yaml#/paths/~1api~1applications~1{applicationId}~1resume"
+  /admin/stats:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1stats"
+  /admin/users:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1users"
+  /admin/users/{userId}/status:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1users~1{userId}~1status"
+  /admin/jobs:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1jobs"
+  /admin/jobs/{jobId}/status:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1jobs~1{jobId}~1status"
+  /admin/reports:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1reports"
+  /admin/reports/{reportId}:
+    $ref: "./admin-api.yaml#/paths/~1api~1admin~1reports~1{reportId}"
+  /reports/jobs/{jobId}:
+    $ref: "./admin-api.yaml#/paths/~1api~1reports~1jobs~1{jobId}"
 
 
 
