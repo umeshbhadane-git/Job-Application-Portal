@@ -1,0 +1,197 @@
+paths:
+  /api/applications:
+    post:
+      tags: [Applications]
+      summary: Apply for an active published job
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jobId]
+              properties:
+                jobId:
+                  type: string
+                  pattern: "^[a-fA-F0-9]{24}$"
+      responses:
+        "201":
+          description: Application submitted
+        "400":
+          description: Resume missing or job application invalid
+        "401":
+          description: Authentication required
+        "403":
+          description: Job seeker access required
+        "409":
+          description: Duplicate application
+
+  /api/applications/me:
+    get:
+      tags: [Applications]
+      summary: List the current job seeker's applications
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Applications with current recruitment stage
+        "401":
+          description: Authentication required
+
+  /api/applications/me/stats:
+    get:
+      tags: [Applications]
+      summary: Get the current job seeker's application counts and recent applications
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Aggregated application statistics
+
+  /api/applications/recruiter/stats:
+    get:
+      tags: [Applications]
+      summary: Get application counts and job-wise metrics for the recruiter
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Recruiter-owned job and application statistics
+
+  /api/applications/jobs/{jobId}:
+    get:
+      tags: [Applications]
+      summary: List candidates for a recruiter-owned job
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [applied, under-review, shortlisted, interview-scheduled, selected, rejected, withdrawn]
+        - in: query
+          name: skill
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [newest, oldest, experience]
+      responses:
+        "200":
+          description: Matching candidate applications
+        "404":
+          description: Job not found or not owned by recruiter
+
+  /api/applications/{applicationId}/status:
+    patch:
+      tags: [Applications]
+      summary: Move an application through an allowed recruitment transition
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: applicationId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [under-review, shortlisted, interview-scheduled, selected, rejected]
+      responses:
+        "200":
+          description: Application status updated
+        "400":
+          description: Invalid transition
+        "404":
+          description: Application not found or not owned by recruiter
+
+  /api/applications/{applicationId}/withdraw:
+    patch:
+      tags: [Applications]
+      summary: Withdraw an eligible application
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: applicationId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Application withdrawn
+        "400":
+          description: Application is no longer eligible for withdrawal
+        "404":
+          description: Application not found
+
+  /api/applications/{applicationId}/notes:
+    post:
+      tags: [Applications]
+      summary: Add a private recruiter note to an application
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: applicationId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+      responses:
+        "200":
+          description: Private note added
+        "404":
+          description: Application not found or not owned by recruiter
+
+  /api/applications/{applicationId}/resume:
+    get:
+      tags: [Applications]
+      summary: Download a resume attached to an application
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: applicationId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Resume file stream
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Application or resume not found

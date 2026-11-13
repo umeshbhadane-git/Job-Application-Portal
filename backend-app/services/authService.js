@@ -109,7 +109,7 @@ export const loginUser = async ({email, password}) => {
         throw error;
     }
 
-    if (!user.isActive) 
+    if (!user.isActive || (user.accountStatus && user.accountStatus !== "active"))
     {
         const error = new Error("Account is inactive");
         error.statusCode = 403;

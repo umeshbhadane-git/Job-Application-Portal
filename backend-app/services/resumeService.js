@@ -4,6 +4,7 @@ import { Readable } from "node:stream";
 import { getResumeBucket } from "../config/gridfs.js";
 import Profile from "../models/Profile.js";
 import { ObjectId } from "mongodb";
+import Application from "../models/Application.js";
 
 export const uploadResumeForUser = async (userId, file) => {
   if (!file) {
@@ -56,7 +57,11 @@ export const uploadResumeForUser = async (userId, file) => {
 
     await profile.save();
 
-    if (previousFileId && mongoose.isValidObjectId(previousFileId)) {
+    if (
+      previousFileId &&
+      mongoose.isValidObjectId(previousFileId) &&
+      !(await Application.exists({ resumeStorageKey: previousFileId }))
+    ) {
       try {
         await bucket.delete(
           new mongoose.Types.ObjectId(previousFileId)
@@ -97,7 +102,9 @@ export const deleteResumeForUser = async (userId) => {
     throw error;
   }
 
-  await bucket.delete(new mongoose.Types.ObjectId(fileId));
+  if (!(await Application.exists({ resumeStorageKey: fileId }))) {
+    await bucket.delete(new mongoose.Types.ObjectId(fileId));
+  }
 
   profile.resume = null;
   await profile.save();
@@ -115,14 +122,18 @@ export const downloadResumeForUser = async (userId) => {
     throw error;
   }
 
-  if (!mongoose.isValidObjectId(profile.resume.storageKey)) {
+  return downloadResumeByStorageKey(profile.resume.storageKey);
+};
+
+export const downloadResumeByStorageKey = async (storageKey) => {
+  if (!mongoose.isValidObjectId(storageKey)) {
     const error = new Error("Stored resume reference is invalid");
-    error.status = 500;
+    error.statusCode = 500;
     throw error;
   }
 
   const bucket = getResumeBucket();
-  const fileId = new ObjectId(profile.resume.storageKey);
+  const fileId = new ObjectId(storageKey);
 
   const files = await bucket.find({ _id: fileId }).toArray();
   const file = files[0];

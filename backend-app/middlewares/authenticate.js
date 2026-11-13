@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-export const authenticate = (req, res, next) => {
+export const authenticate = async (req, res, next) => {
 
     const authorization = req.headers.authorization;
 
@@ -14,41 +15,46 @@ export const authenticate = (req, res, next) => {
 
     const token = authorization.slice(7);
 
-    try{
-
-        const secret = process.env.JWT_SECRET;
-
-        if(!secret)
-        {
-            throw new Error("JWT_SECRET is missing");
-        }
-
-        const decoded = jwt.verify(token, secret);
-
-        if( typeof decoded === "string" || !decoded.sub || !decoded.role )
-        {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid authentication token",
-            });
-        }
-
-        req.user = {
-            id: decoded.sub,
-            role: decoded.role
-        };
-
-        next();
-
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        return res.status(500).json({
+            success: false,
+            message: "Authentication is not configured",
+        });
     }
-    catch(error)
-    {
 
+    let decoded;
+    try {
+        decoded = jwt.verify(token, secret);
+    } catch {
         return res.status(401).json({
             success: false,
             message: "Invalid or expired token",
         });
-
     }
+
+    if (typeof decoded === "string" || !decoded.sub || !decoded.role) {
+        return res.status(401).json({
+            success: false,
+            message: "Invalid authentication token",
+        });
+    }
+
+    const user = await User.findById(decoded.sub).select(
+        "role isActive accountStatus"
+    );
+    if (
+        !user ||
+        !user.isActive ||
+        (user.accountStatus && user.accountStatus !== "active")
+    ) {
+        return res.status(401).json({
+            success: false,
+            message: "Account is inactive",
+        });
+    }
+
+    req.user = { id: user._id.toString(), role: user.role };
+    return next();
 
 };
