@@ -2,9 +2,8 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  ArrowUpRight,
   BriefcaseBusiness,
-  CheckCircle2,
+  MapPin,
   Search,
   Sparkles,
   TrendingUp,
@@ -12,201 +11,93 @@ import {
 } from "lucide-react";
 
 import Navbar from "../components/layout/Navbar";
-import JobCard, { type Job } from "../components/home/JobCard";
-
-const jobs: Job[] = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    company: "TechNova",
-    location: "Pune, India",
-    type: "Full-time",
-    salary: "₹6–10 LPA",
-    category: "Engineering",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "React Developer",
-    company: "PixelWorks",
-    location: "Bengaluru, India",
-    type: "Hybrid",
-    salary: "₹8–14 LPA",
-    category: "Technology",
-  },
-  {
-    id: 3,
-    title: "Product Designer",
-    company: "BrightLabs",
-    location: "Remote",
-    type: "Full-time",
-    salary: "₹7–12 LPA",
-    category: "Design",
-    featured: true,
-  },
-];
+import FeaturedJobs from "@/components/home/FeaturedJobs";
 
 const categories = [
-  { name: "Engineering", count: "1,240+", icon: BriefcaseBusiness },
-  { name: "Design", count: "580+", icon: Sparkles },
-  { name: "Marketing", count: "760+", icon: TrendingUp },
-  { name: "Human Resources", count: "320+", icon: Users },
+  { name: "Engineering", count: "Search open roles", icon: BriefcaseBusiness },
+  { name: "Design", count: "Search open roles", icon: Sparkles },
+  { name: "Marketing", count: "Search open roles", icon: TrendingUp },
+  { name: "Human Resources", count: "Search open roles", icon: Users },
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-white">
+    <main className="app-theme min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-white">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-slate-50 dark:bg-slate-950">
-        <div className="pointer-events-none absolute -right-20 -top-24 -z-10 size-96 rounded-full bg-blue-200/50 blur-3xl dark:bg-blue-900/20" />
-        <div className="pointer-events-none absolute -bottom-36 -left-20 -z-10 size-80 rounded-full bg-indigo-200/40 blur-3xl dark:bg-indigo-900/20" />
+      <section className="relative isolate overflow-hidden bg-[#f3f5ef] dark:bg-[#151d13]">
+        <div className="pointer-events-none absolute -right-24 -top-40 -z-10 size-[520px] rounded-full border border-[#35472e]/[0.06] dark:border-white/[0.05]" />
+        <div className="pointer-events-none absolute -bottom-40 left-[14%] -z-10 size-96 rounded-full bg-[#c4e58a]/20 blur-3xl dark:bg-[#c4e58a]/[0.06]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 md:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm dark:border-blue-900 dark:bg-slate-900 dark:text-blue-300">
-              <Sparkles size={16} />
-              Your next opportunity starts here
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:py-18 lg:px-8 lg:py-20">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#dce4d1] bg-white/80 px-3.5 py-2 text-xs font-semibold text-[#536b3d] shadow-sm dark:border-[#35412f] dark:bg-[#1b2419] dark:text-[#c4e58a]">
+              <Sparkles size={15} />
+              A clearer way to find your next role
             </div>
 
-            <h1 className="mt-7 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
-              Find work that
-              <span className="block text-blue-600">
+            <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-[-0.05em] text-[#20251f] dark:text-white sm:text-5xl lg:text-[60px]">
+              Find a job that
+              <span className="block text-[#536b3d] dark:text-[#c4e58a]">
                 moves you forward.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
-              Discover opportunities that match your skills, explore
-              companies you admire, and take the next step in your career.
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#6d7367] dark:text-[#b8c2b0] sm:text-base">
+              Search published opportunities, compare the details, and find a
+              role that fits your next step.
             </p>
 
             <form
               action="/jobs"
               method="get"
-              className="mt-8 grid gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-[1fr_1fr_auto]"
+              className="mx-auto mt-8 grid max-w-4xl gap-2 rounded-2xl border border-[#e4e6de] bg-white p-2.5 shadow-[0_18px_50px_rgba(32,37,31,0.10)] dark:border-[#35412f] dark:bg-[#1b2419] sm:grid-cols-[1fr_1fr_auto] sm:p-3"
             >
-              <label className="flex min-w-0 items-center gap-3 px-3">
-                <Search size={20} className="shrink-0 text-blue-600" />
+              <label className="flex min-w-0 items-center gap-3 rounded-xl px-3">
+                <Search size={19} className="shrink-0 text-[#718455] dark:text-[#c4e58a]" />
                 <input
                   type="search"
                   name="q"
-                  placeholder="Job title or keyword"
-                  aria-label="Job title or keyword"
-                  className="min-w-0 w-full bg-transparent py-3 text-sm outline-none placeholder:text-slate-400"
+                  placeholder="Job title, company, or skill"
+                  aria-label="Job title, company, or skill"
+                  className="min-w-0 w-full bg-transparent py-3 text-sm outline-none placeholder:text-[#9a9d94] dark:text-[#edf2e8] dark:placeholder:text-[#858e7d]"
                 />
               </label>
 
-              <label className="flex min-w-0 items-center gap-3 border-t border-slate-100 px-3 sm:border-l sm:border-t-0 dark:border-slate-800">
-                <BriefcaseBusiness
-                  size={19}
-                  className="shrink-0 text-blue-600"
-                />
+              <label className="flex min-w-0 items-center gap-3 rounded-xl border-t border-[#eeede7] px-3 sm:border-l sm:border-t-0 dark:border-[#35412f]">
+                <MapPin size={18} className="shrink-0 text-[#718455] dark:text-[#c4e58a]" />
                 <input
                   type="text"
                   name="location"
                   placeholder="City or remote"
                   aria-label="Job location"
-                  className="min-w-0 w-full bg-transparent py-3 text-sm outline-none placeholder:text-slate-400"
+                  className="min-w-0 w-full bg-transparent py-3 text-sm outline-none placeholder:text-[#9a9d94] dark:text-[#edf2e8] dark:placeholder:text-[#858e7d]"
                 />
               </label>
 
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+                className="flex items-center justify-center gap-2 rounded-xl bg-[#36472e] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#26351f] dark:bg-[#c4e58a] dark:text-[#25311d] dark:hover:bg-[#d2efa2]"
               >
-                Search Jobs
-                <ArrowRight size={17} />
+                Search jobs <ArrowRight size={17} />
               </button>
             </form>
 
-            <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-              Popular:{" "}
-              <Link href="/jobs?q=React" className="hover:text-blue-600">
-                React
-              </Link>
-              {" · "}
-              <Link href="/jobs?q=Node.js" className="hover:text-blue-600">
-                Node.js
-              </Link>
-              {" · "}
-              <Link href="/jobs?q=UI%2FUX" className="hover:text-blue-600">
-                UI/UX
-              </Link>
-              {" · "}
-              <Link href="/jobs?q=Remote" className="hover:text-blue-600">
-                Remote
-              </Link>
-            </p>
-          </div>
-
-          {/* Hero visual */}
-          <div className="relative mx-auto w-full max-w-lg">
-            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl shadow-blue-950/10 dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Career overview
-                  </p>
-                  <h2 className="mt-1 text-xl font-bold">
-                    Your next chapter
-                  </h2>
-                </div>
-                <span className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-950 dark:text-blue-300">
-                  <TrendingUp size={23} />
-                </span>
-              </div>
-
-              <div className="mt-7 rounded-2xl bg-slate-50 p-5 dark:bg-slate-800/70">
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Find your best-fit opportunity
-                </p>
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="flex size-12 items-center justify-center rounded-xl bg-blue-600 text-white">
-                    <BriefcaseBusiness size={22} />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Opportunities for you</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Explore roles that fit your goals
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-5 space-y-3">
-                  {["Discover relevant jobs", "Explore new companies", "Track your applications"].map(
-                    (item) => (
-                      <div key={item} className="flex items-center gap-2 text-sm">
-                        <CheckCircle2 size={17} className="text-emerald-500" />
-                        <span className="text-slate-600 dark:text-slate-300">
-                          {item}
-                        </span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 dark:border-blue-900 dark:bg-blue-950/40">
-                <div>
-                  <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">
-                    Ready for your next move?
-                  </p>
-                  <p className="mt-1 text-xs text-blue-700 dark:text-blue-300">
-                    Create your profile to get started.
-                  </p>
-                </div>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs">
+              <span className="mr-1 font-medium text-[#7d8177] dark:text-[#aab2a4]">
+                Explore:
+              </span>
+              {categories.map((category) => (
                 <Link
-                  href="/register"
-                  aria-label="Create your profile"
-                  className="shrink-0 rounded-xl bg-blue-600 p-2.5 text-white hover:bg-blue-700"
+                  key={category.name}
+                  href={`/jobs?search=${encodeURIComponent(category.name)}`}
+                  className="rounded-full border border-[#e0e4d8] bg-white/70 px-3 py-1.5 font-medium text-[#59664b] transition hover:border-[#b6c4a4] hover:bg-white dark:border-[#35412f] dark:bg-[#1b2419] dark:text-[#c0c9b8] dark:hover:text-[#c4e58a]"
                 >
-                  <ArrowUpRight size={20} />
+                  {category.name}
                 </Link>
-              </div>
+              ))}
             </div>
-
-          </div> 
+          </div>
         </div>
       </section>
 
@@ -233,7 +124,7 @@ export default function HomePage() {
             return (
               <Link
                 key={category.name}
-                href={`/jobs?category=${encodeURIComponent(category.name)}`}
+                href={`/jobs?search=${encodeURIComponent(category.name)}`}
                 className="group rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-900"
               >
                 <span className="inline-flex rounded-xl bg-blue-50 p-3 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-950 dark:text-blue-300">
@@ -241,7 +132,7 @@ export default function HomePage() {
                 </span>
                 <h3 className="mt-5 font-bold">{category.name}</h3>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                  {category.count} opportunities
+                  {category.count}
                 </p>
               </Link>
             );
@@ -250,35 +141,31 @@ export default function HomePage() {
       </section>
 
       {/* Featured jobs */}
-      <section className="bg-slate-50 py-16 dark:bg-slate-900/50">
+      <section className="bg-[#f3f4ef] py-16 dark:bg-[#151d13]">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-                Handpicked for discovery
+                Fresh from recruiters
               </p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight">
-                Featured opportunities
+                Open opportunities
               </h2>
               <p className="mt-3 text-slate-500 dark:text-slate-400">
-                A preview of how job listings will appear.
+                Published roles with deadlines that have not passed.
               </p>
             </div>
 
             <Link
               href="/jobs"
-              className="inline-flex items-center gap-2 self-start font-semibold text-blue-600 hover:text-blue-700 sm:self-auto"
+              className="inline-flex items-center gap-2 self-start font-semibold text-[#536b3d] hover:text-[#26351f] dark:text-[#c4e58a] dark:hover:text-white sm:self-auto"
             >
               Browse all jobs
               <ArrowRight size={18} />
             </Link>
           </div>
 
-          <div className="mt-9 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {jobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
+          <FeaturedJobs />
         </div>
       </section>
 
@@ -286,7 +173,7 @@ export default function HomePage() {
       <section id="for-employers" className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         <div
           id="how-it-works"
-          className="overflow-hidden rounded-3xl bg-blue-600 px-6 py-10 text-white sm:px-10 sm:py-12 lg:px-14"
+          className="overflow-hidden rounded-3xl bg-[#35472e] px-6 py-10 text-white sm:px-10 sm:py-12 lg:px-14"
         >
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
             <div className="max-w-2xl">
@@ -297,8 +184,8 @@ export default function HomePage() {
                 Find the people who move your business forward.
               </h2>
               <p className="mt-4 leading-7 text-blue-100">
-                Create a recruiter account to get ready to publish openings
-                and manage applicants.
+                Create a recruiter account to publish openings and keep your
+                job listings up to date.
               </p>
             </div>
 
