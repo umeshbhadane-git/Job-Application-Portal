@@ -15,6 +15,7 @@ import {
   MapPin,
   Plus,
   Save,
+  Settings2,
   Sparkles,
   Trash2,
   Upload,
@@ -248,23 +249,27 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-300">
+      <main className="app-theme flex min-h-screen items-center justify-center bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-300">
         Loading your profile...
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white">
+    <main className="app-theme min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white">
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-          <Link href="/dashboard" className="flex items-center gap-2 text-lg font-bold">
-            <span className="rounded-xl bg-blue-600 p-2 text-white">
-              <BriefcaseBusiness size={19} />
-            </span>
-            Career<span className="text-blue-600">Bridge</span>
-          </Link>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            Your profile
+          </p>
           <div className="flex items-center gap-2 sm:gap-4">
+            <Link
+              href="/settings/appearance"
+              aria-label="Appearance settings"
+              className="flex size-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <Settings2 size={16} />
+            </Link>
             <Link
               href="/dashboard"
               className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 sm:flex"

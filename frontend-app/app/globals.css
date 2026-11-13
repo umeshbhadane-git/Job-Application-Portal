@@ -7,14 +7,30 @@ html {
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f7f3;
+  --foreground: #20251f;
+  --surface: #ffffff;
+  --surface-muted: #f1f2eb;
+  --border: #e7e8e1;
+  --accent: #36472e;
+  --accent-hover: #26351f;
+  --accent-soft: #edf4e4;
+  --accent-text: #58763d;
+  --page-muted: #777a71;
   color-scheme: light;
 }
 
 :root.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #10150f;
+  --foreground: #edf2e8;
+  --surface: #1b2419;
+  --surface-muted: #20291f;
+  --border: #303b2b;
+  --accent: #c4e58a;
+  --accent-hover: #d2efa2;
+  --accent-soft: #2a3823;
+  --accent-text: #c4e58a;
+  --page-muted: #aab2a4;
   color-scheme: dark;
 }
 
@@ -26,7 +42,173 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.app-theme {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.dark .app-theme[class~="bg-white"],
+.dark .app-theme[class~="bg-slate-50"],
+.dark .app-theme[class~="bg-slate-950"],
+.dark .app-theme[class*="bg-[#f7f7f3]"] {
+  background-color: var(--background) !important;
+}
+
+.dark .app-theme [class~="bg-white"],
+.dark .app-theme [class~="bg-slate-50"],
+.dark .app-theme [class*="bg-[#fbfbf8]"],
+.dark .app-theme [class*="bg-[#fbfbf9]"] {
+  background-color: var(--surface);
+}
+
+.dark .app-theme [class*="bg-[#f7f7f3]"],
+.dark .app-theme [class*="bg-[#f3f5ed]"],
+.dark .app-theme [class*="bg-[#f3f4ef]"],
+.dark .app-theme [class*="bg-[#efeee6]"] {
+  background-color: var(--surface-muted);
+}
+
+.dark .app-theme [class*="border-[#e9e8e1]"],
+.dark .app-theme [class*="border-[#e7e5df]"],
+.dark .app-theme [class*="border-[#e7e8e1]"],
+.dark .app-theme [class*="border-slate-200"] {
+  border-color: var(--border);
+}
+
+.dark .app-theme [class*="text-[#20251f]"],
+.dark .app-theme [class*="text-[#262c24]"],
+.dark .app-theme [class*="text-[#343a30]"],
+.dark .app-theme [class*="text-[#30382a]"],
+.dark .app-theme [class*="text-[#4a5046]"] {
+  color: var(--foreground);
+}
+
+.dark .app-theme [class*="text-[#777a71]"],
+.dark .app-theme [class*="text-[#7d8177]"],
+.dark .app-theme [class*="text-[#85887f]"],
+.dark .app-theme [class*="text-[#92958d]"],
+.dark .app-theme [class*="text-[#9a9d94]"] {
+  color: var(--page-muted);
+}
+
+html:not(.dark) .bg-blue-600 {
+  background-color: var(--accent) !important;
+}
+
+html:not(.dark) .text-blue-600,
+html:not(.dark) .text-blue-700 {
+  color: var(--accent-text) !important;
+}
+
+html:not(.dark) .text-blue-900 {
+  color: var(--accent) !important;
+}
+
+html:not(.dark) .text-blue-100,
+html:not(.dark) .text-blue-200 {
+  color: #e1ebd4 !important;
+}
+
+html:not(.dark) .bg-blue-50,
+html:not(.dark) .bg-blue-100 {
+  background-color: var(--accent-soft) !important;
+}
+
+html:not(.dark) .border-blue-100,
+html:not(.dark) .border-blue-200 {
+  border-color: #dce8ca !important;
+}
+
+html:not(.dark) [class~="bg-slate-50"] {
+  background-color: var(--background);
+}
+
+html:not(.dark) [class~="hover:bg-blue-700"]:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+html:not(.dark) [class~="hover:text-blue-600"]:hover,
+html:not(.dark) [class~="hover:text-blue-700"]:hover {
+  color: var(--accent-text) !important;
+}
+
+html:not(.dark) [class~="focus:border-blue-500"]:focus {
+  border-color: #839967 !important;
+}
+
+html:not(.dark) [class~="accent-blue-600"] {
+  accent-color: var(--accent-text) !important;
+}
+
+.dark .bg-blue-600 {
+  background-color: #58763d !important;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-700,
+.dark .text-blue-400,
+.dark .text-blue-300 {
+  color: var(--accent) !important;
+}
+
+.dark .text-blue-100,
+.dark .text-blue-200 {
+  color: #dce8ca !important;
+}
+
+.dark .bg-blue-50,
+.dark .bg-blue-100,
+.dark .bg-blue-950 {
+  background-color: var(--accent-soft) !important;
+}
+
+.dark .border-blue-100,
+.dark .border-blue-200,
+.dark .border-blue-900 {
+  border-color: var(--border) !important;
+}
+
+.dark [class~="bg-slate-50"],
+.dark [class~="bg-slate-950"] {
+  background-color: var(--background);
+}
+
+.dark [class~="bg-slate-900"] {
+  background-color: var(--surface);
+}
+
+.dark [class~="border-slate-200"],
+.dark [class~="border-slate-800"],
+.dark [class~="border-slate-700"] {
+  border-color: var(--border);
+}
+
+.dark [class~="hover:bg-blue-700"]:hover {
+  background-color: #486236 !important;
+}
+
+.dark [class~="hover:bg-blue-950"]:hover {
+  background-color: var(--accent-soft) !important;
+}
+
+.dark [class~="focus:border-blue-500"]:focus {
+  border-color: #91a96a !important;
+}
+
+.dark [class~="accent-blue-600"] {
+  accent-color: var(--accent) !important;
+}
+
+.dark .bg-indigo-200,
+.dark .bg-blue-200 {
+  background-color: #405333;
+}
+
+.dark .bg-indigo-900 {
+  background-color: #293823;
+}
+
 ::selection {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #dce8ca;
+  color: #26351f;
 }

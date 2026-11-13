@@ -12,6 +12,7 @@ import {
   LoaderCircle,
   LockKeyhole,
   Mail,
+  Settings2,
   UserRound,
 } from "lucide-react";
 
@@ -99,17 +100,26 @@ export default function RegisterPage() {
     "w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-white";
 
   return (
-    <main className="min-h-screen bg-slate-50 px-5 py-10 text-slate-900 dark:bg-slate-950 dark:text-white sm:py-14">
+    <main className="app-theme min-h-screen bg-slate-50 px-5 py-10 text-slate-900 dark:bg-slate-950 dark:text-white sm:py-14">
       <div className="mx-auto max-w-md">
-        <Link
-          href="/"
-          className="mb-8 flex items-center justify-center gap-2 text-xl font-bold tracking-tight"
-        >
-          <span className="rounded-xl bg-blue-600 p-2 text-white">
-            <BriefcaseBusiness size={22} />
-          </span>
-          Career<span className="text-blue-600">Bridge</span>
-        </Link>
+        <div className="mb-8 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xl font-bold tracking-tight"
+          >
+            <span className="rounded-xl bg-blue-600 p-2 text-white">
+              <BriefcaseBusiness size={22} />
+            </span>
+            Career<span className="text-blue-600">Bridge</span>
+          </Link>
+          <Link
+            href="/settings/appearance"
+            aria-label="Appearance settings"
+            className="flex size-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition hover:bg-white dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            <Settings2 size={17} />
+          </Link>
+        </div>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900 sm:p-8">
           <div className="text-center">

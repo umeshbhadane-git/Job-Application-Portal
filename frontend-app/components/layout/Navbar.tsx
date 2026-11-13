@@ -2,20 +2,77 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { BriefcaseBusiness, Menu, Moon, Sun, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  BriefcaseBusiness,
+  Menu,
+  Settings2,
+  UserRound,
+  X,
+} from "lucide-react";
+
+type User = {
+  fullName: string;
+  role: "jobSeeker" | "recruiter" | "admin";
+};
+
+function readSignedInUser(): User | null {
+  const token = sessionStorage.getItem("authToken");
+  const storedUser = sessionStorage.getItem("authUser");
+  if (!token || !storedUser) return null;
+
+  try {
+    const user: unknown = JSON.parse(storedUser);
+    const payloadPart = token.split(".")[1];
+    if (!payloadPart || !isNavbarUser(user)) return null;
+
+    const base64 = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
+    const payload: unknown = JSON.parse(
+      atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "="))
+    );
+    if (
+      typeof payload !== "object" ||
+      payload === null ||
+      !("exp" in payload) ||
+      typeof payload.exp !== "number" ||
+      payload.exp * 1000 <= Date.now()
+    ) {
+      return null;
+    }
+
+    return user;
+  } catch {
+    return null;
+  }
+}
+
+function isNavbarUser(value: unknown): value is User {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "fullName" in value &&
+    typeof value.fullName === "string" &&
+    "role" in value &&
+    (value.role === "jobSeeker" ||
+      value.role === "recruiter" ||
+      value.role === "admin")
+  );
+}
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
-  const toggleTheme = () => {
-    const nextDark = !document.documentElement.classList.contains("dark");
-    document.documentElement.classList.toggle("dark", nextDark);
-    localStorage.setItem(
-      "job-portal-theme",
-      nextDark ? "dark" : "light"
-    );
-  };
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) setUser(readSignedInUser());
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/90">
@@ -30,64 +87,56 @@ export default function Navbar() {
           Career<span className="text-blue-600">Bridge</span>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           <Link
             href="/jobs"
             className="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300"
           >
             Find Jobs
           </Link>
-          <a
-            href="#how-it-works"
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300"
-          >
-            How It Works
-          </a>
-          <a
-            href="#for-employers"
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300"
-          >
-            For Employers
-          </a>
-        </div>
-
-        <div className="hidden items-center gap-3 md:flex">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="rounded-xl border border-slate-200 p-2.5 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-          >
-            <Moon className="block dark:hidden" size={18} />
-            <Sun className="hidden dark:block" size={18} />
-          </button>
-
           <Link
-            href="/login"
-            className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+            href="/#for-employers"
+            className="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300"
           >
-            Log in
+            For employers
           </Link>
-
           <Link
-            href="/register"
-            className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+            href="/settings/appearance"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300"
           >
-            Get Started
+            <Settings2 size={15} />
+            Appearance
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="rounded-xl border border-slate-200 p-2.5 dark:border-slate-700"
-          >
-            <Moon className="block dark:hidden" size={18} />
-            <Sun className="hidden dark:block" size={18} />
-          </button>
+        <div className="hidden items-center gap-3 lg:flex">
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              <UserRound size={17} />
+              {user.fullName}
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+        </div>
 
+        <div className="flex items-center gap-2 lg:hidden">
           <button
             type="button"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -101,7 +150,7 @@ export default function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="space-y-1 border-t border-slate-200 px-5 py-4 dark:border-slate-800 md:hidden">
+        <div className="space-y-1 border-t border-slate-200 px-5 py-4 dark:border-slate-800 lg:hidden">
           <Link
             href="/jobs"
             onClick={() => setMenuOpen(false)}
@@ -110,19 +159,47 @@ export default function Navbar() {
             Find Jobs
           </Link>
           <Link
-            href="/login"
+            href="/#for-employers"
             onClick={() => setMenuOpen(false)}
             className="block rounded-lg px-3 py-3 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            Log in
+            For employers
           </Link>
           <Link
-            href="/register"
+            href="/settings/appearance"
             onClick={() => setMenuOpen(false)}
-            className="block rounded-lg bg-blue-600 px-3 py-3 text-center text-sm font-semibold text-white"
+            className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            Get Started
+            <Settings2 size={16} />
+            Appearance
           </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              <UserRound size={17} />
+              {user.fullName}
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="block rounded-lg px-3 py-3 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMenuOpen(false)}
+                className="block rounded-lg bg-blue-600 px-3 py-3 text-center text-sm font-semibold text-white"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>
